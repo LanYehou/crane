@@ -14,7 +14,8 @@ def measure_object(src_im):
         area = cv.contourArea(contour)
         x,y,w,h =cv.boundingRect(contour)
         rate = min(w,h)/max(w,h)
-        mm = cv.moments(contour)  #计算几何中心
+        mm = cv.moments(contour)#计算几何中心
+        print (mm)
         cx = mm['m10']/mm['m00']
         cy = mm['m01']/mm['m00']
         print (int(cx),int(cy))
