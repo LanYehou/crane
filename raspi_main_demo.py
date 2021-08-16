@@ -76,10 +76,6 @@ def main():
                     if text == 'stop':
                         what_todo = 'take_first_box'
                         pass
-'''
-class box:
-    def __init__(self,color,shape,location):
-        self.color=color
-        self.shape=shape
-        self.location=location
-'''
+
+if __name__ == '__main__':
+    main()
