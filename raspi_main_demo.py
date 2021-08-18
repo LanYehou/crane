@@ -13,7 +13,7 @@ what_todo_list=['take_first_box','take_second_box','laydown_box','goto_stacking_
 what_todo='take_first_box'
 saved_box=[['0','0'],['0','0']]
 def take_box():
-    raspi_message.send_text('take_box')
+    raspi_message.send_text('take_box\n')
 
 def detect_box():
     boxcolor,boxtype = get_boxtype()
@@ -24,15 +24,15 @@ def detect_box():
 def go_to_location(wish_location):
     if abs((wish_location-mylocation))>=2 :
         if wish_location > mylocation :
-            raspi_message.send_text('go_ahead_fast')
+            raspi_message.send_text('go_ahead_fast\n')
         elif wish_location < mylocation :
-            raspi_message.send_text('go_back_fast')
+            raspi_message.send_text('go_back_fast\n')
         while 1 :
             if abs(wish_location-mylocation) <2 :
                 if wish_location > mylocation:
-                    raspi_message.send_text('go_ahead')
+                    raspi_message.send_text('go_ahead\n')
                 elif wish_location < mylocation:
-                    raspi_message.send_text('go_back')
+                    raspi_message.send_text('go_back\n')
                 return (1)
 
 
@@ -40,21 +40,21 @@ def go_to_location(wish_location):
 def main():
     while 1 :
         if stacking_area[0]=='0' or stacking_area[1]=='0' or stacking_area[2]=='0' :
-            if what_todo == 'take_first_box' :
+            if what_todo == 'take_first_box\n' :
                 for i in storage_cache :
                     if i[0]=='red':
                         go_to_location(storage_cache.index(i))
                         take_box()
                         text=raspi_message.receive_text()
                         if text == 'stop':
-                            what_todo='take_second_box'
-                raspi_message.send_text('go_ahead')
+                            what_todo='take_second_box\n'
+                raspi_message.send_text('go_ahead\n')
                 text = raspi_message.receive_text()
                 if text == 'stop':
                     detect_box()
                     print(storage_cache)
                     return 0
-            elif what_todo == 'take_second_dox'  :
+            elif what_todo == 'take_second_dox\n'  :
                 for i in storage_cache :
                     if i[1]==saved_box[0][1]:
                         go_to_location(storage_cache.index(i))
@@ -63,18 +63,18 @@ def main():
                         if text == 'stop':
                             what_todo='laydown_box'
                             break
-                raspi_message.send_text('go_ahead')
+                raspi_message.send_text('go_ahead\n')
                 text = raspi_message.receive_text()
                 if text == 'stop':
                     detect_box()
-            elif what_todo == 'laydown_box':
+            elif what_todo == 'laydown_box\n':
                 go_to_location()
                 text=raspi_message.receive_text()
                 if text == 'stop':
-                    raspi_message.send_text('laydown_box')
+                    raspi_message.send_text('laydown_box\n')
                     text=raspi_message.receive_text()
                     if text == 'stop':
-                        what_todo = 'take_first_box'
+                        what_todo = 'take_first_box\n'
                         pass
 
 if __name__ == '__main__':
