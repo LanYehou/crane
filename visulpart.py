@@ -32,6 +32,7 @@ version: Beta 1.1；
 
 import cv2 as cv
 import numpy as np
+import time
 from collections import Counter
 
 blue_lower = np.array([100, 130, 60]) # 蓝色范围，最低值
@@ -91,11 +92,11 @@ def get_boxtype():
     global frame
     global hsv
     shape=[]
-    cap = cv.VideoCapture(1)
+    cap = cv.VideoCapture(0)
     times=0
-
-    while times<20:
-        times = times + 1
+    time_of_run=0
+    time_start=time.time()
+    while times<20 and time_of_run<5:
         ret, frame = cap.read()
         frame = cv.GaussianBlur(frame, (5, 5), 0)
         hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
@@ -107,16 +108,19 @@ def get_boxtype():
                 shape.append('redcricle')
                 x = cricle_x
                 y = cricle_y
+                times = times + 1
             else:
                 polygon_x,polygon_y,polygon_type=find_polygon()
                 if polygon_type == 'rectangel' :
                     shape.append('red'+polygon_type)
                     x = polygon_x
                     y = polygon_y
+                    times = times + 1
                 elif polygon_type  == 'triangel' :
                     shape.append('red'+polygon_type)
                     x = polygon_x
                     y = polygon_y
+                    times = times + 1
                 else:
                     pass
         else:
@@ -128,23 +132,42 @@ def get_boxtype():
                     shape.append('bluecricle')
                     x = cricle_x
                     y = cricle_y
+                    times = times + 1
                 else:
                     polygon_x, polygon_y, polygon_type = find_polygon()
                     if polygon_type == 'rectangel':
                         shape.append('blue' + polygon_type)
                         x = polygon_x
                         y = polygon_y
+                        times = times + 1
                     elif polygon_type == 'triangel':
                         shape.append('blue' + polygon_type)
                         x = polygon_x
                         y = polygon_y
+                        times = times + 1
                     else:
                         pass
             else:
                 pass
+        time_end = time.time()
+        time_of_run = time_end-time_start
+        print(time_of_run)
     cap.release()
     collection_shape = Counter(shape)
     most_counterNum = collection_shape.most_common(1)
-    return (most_counterNum[0][0],x,y)
+    if most_counterNum=='redcricle':
+        return ('red','cricle',x,y)
+    elif most_counterNum=='redrectangel':
+        return ('red','rectangel',x,y)
+    elif most_counterNum=='redtriangel':
+        return ('red','triangel',x,y)
+    elif most_counterNum=='bluecricle':
+        return ('blue','cricle',x,y)
+    elif most_counterNum=='bluerectangel':
+        return ('blue','rectangel',x,y)
+    elif most_counterNum=='bluetriangel':
+        return ('blue', 'triangel', x, y)
 
 
+if __name__ == '__main__':
+    get_boxtype()
